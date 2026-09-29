@@ -1,0 +1,67 @@
+# Python dependencies
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+sdist/
+wheels/
+*.egg
+MANIFEST
+
+# Unit test / coverage
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+coverage/
+*.cover
+.cache
+nosetests.xml
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# lcov output
+*.lcov
+
+# dotenv environment variables file
+.env
+.env.test
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
