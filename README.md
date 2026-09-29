@@ -141,8 +141,6 @@ python -m src.main
 ---
 
 ## Contributing
-
-- Add your name to `contributors.txt`.
 - Open a pull request with your changes.
 
 ---
