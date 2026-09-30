@@ -1,154 +1,492 @@
-# Git & GitHub Demo Repository
+# Team Git & GitHub Actions CI/CD
 
-Welcome to our **Git, GitHub, and GitHub Actions tools setup**!
-This repository is designed for **hands-on learning** of version control and CI/CD concepts.
+This repository is a simple four-person team project used to demonstrate a basic CI/CD workflow with Git, GitHub, Pull Requests, and GitHub Actions.
 
----
+### Two rules for `main`
 
-## What You'll Learn
+A Pull Request can be merged into `main` only when:
 
-- Git fundamentals (`clone`, `commit`, `push`, `pull`)
-- GitHub collaboration (`fork`, `pull requests`)
-- Branching strategies
-- GitHub Actions CI/CD pipelines
+1. **The CI workflow completes successfully.**
+2. **At least one other teammate approves the Pull Request.**
 
----
-
-## Exercises
-
-### Exercise 1: Fork and Clone
-
-1. Fork this repository to your GitHub account.
-2. Clone your fork to your local machine:
-
-   ```bash
-   git clone https://github.com/YOUR-STUDENT-USERNAME/git-demo-repo.git
-   cd git-demo-repo
-   ```
-
-3. Add your name to the `contributors.txt` file.
-4. Commit and push your changes.
-5. Create a pull request back to the original repository.
+That is the entire merge protection for this exercise.
 
 ---
 
-### Exercise 2: Feature Development
+# 1. Teammate 1: Configure the project repository
 
-1. Create a new branch for your feature:
+One teammate creates the GitHub repository.
 
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+The base repository should contain:
 
-2. Add a new function to `src/utils.py`.
-3. Write corresponding tests in `tests/test_utils.py`.
-4. Commit and push your branch.
-5. Open a pull request describing your feature.
-
----
-
-### Exercise 3: CI/CD Pipeline
-
-1. Observe the GitHub Actions workflow in `.github/workflows/ci.yml`.
-2. Make changes to code and push them to see the CI/CD pipeline in action.
-3. Watch automated testing and code quality checks execute.
-
----
-
-## Project Structure
-
-```
-git-demo/
-├── README.md
-├── pyproject.toml
-├── requirements.txt
-├── requirements-dev.txt
-├── src/
-│   ├── __init__.py
-│   ├── main.py
-│   └── utils.py
-├── tests/
-│   └── test_utils.py
-├── contributors.txt
-└── .github/
-    └── workflows/
-        └── ci.yml
+```text
+README.md
+requirements.txt
+src/
+tests/
+.github/
+    workflows/
+        ci.yml
 ```
 
+Teammate 1 then adds the other three teammates as collaborators.
+
+On GitHub:
+
+```text
+Repository
+→ Settings
+→ Collaborators
+→ Add people
+```
+
+Add Teammates 2, 3, and 4.
+
 ---
 
-## Getting Started
+# 2. Configure the `main` ruleset
 
-### 1. Fork this repository
+Teammate 1 configures the ruleset.
 
-Click the **Fork** button at the top-right of this page.
+Go to:
 
-### 2. Clone your fork
+```text
+Repository
+→ Settings
+→ Rules
+→ Rulesets
+→ New ruleset
+→ New branch ruleset
+```
+
+Create a ruleset for:
+
+```text
+main
+```
+
+Give it a name such as:
+
+```text
+Protect main
+```
+
+Set the ruleset to **Active**.
+
+## Rule 1: Require a Pull Request
+
+Enable:
+
+```text
+Require a pull request before merging
+```
+
+Set:
+
+```text
+Required approvals: 1
+```
+
+This means at least one teammate other than the person making the change must approve the Pull Request.
+
+## Rule 2: Require the CI workflow
+
+Enable:
+
+```text
+Require status checks to pass before merging
+```
+
+Select the CI check:
+
+```text
+test
+```
+
+The CI workflow contains a job named `test`.
+
+The intended result is:
+
+```text
+CI passes ✓
++
+1 teammate approval ✓
+=
+Merge allowed
+```
+
+### Important
+
+The CI workflow must have run at least once before GitHub can offer its `test` check as a required status check.
+
+If `test` is not available while creating the ruleset:
+
+1. Push the repository to GitHub.
+2. Create a test Pull Request.
+3. Let GitHub Actions run.
+4. Confirm that the `test` check appears.
+5. Return to the ruleset.
+6. Select `test` as the required status check.
+
+---
+
+# 3. Teammates: Clone the shared repository
+
+After accepting the collaboration invitation, each teammate clones **Teammate 1's repository**.
+
+Do not fork it.
+
+Run:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/git-demo-repo.git
-cd git-demo-repo
+git clone https://github.com/OWNER-USERNAME/REPOSITORY-NAME.git
 ```
 
-### 3. Create a virtual environment
+Then enter the repository:
 
 ```bash
+cd REPOSITORY-NAME
+```
+
+Everyone should be working with the same repository.
+
+---
+
+# 4. Download the requirements
+
+Create a virtual environment.
+
+### Windows PowerShell
+
+```powershell
 python -m venv .venv
-```
-
-Activate it:
-
-```bash
-# macOS / Linux
-source .venv/bin/activate
-
-# Windows PowerShell
 .venv\Scripts\Activate.ps1
 ```
 
-### 4. Install dependencies
+### macOS / Linux
 
 ```bash
-pip install -r requirements-dev.txt
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-### 5. Run tests
+Install the requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 5. Test the existing project locally
+
+Before making any changes, make sure the existing code works.
+
+Run:
 
 ```bash
 pytest
 ```
 
-Coverage is collected automatically and written to `coverage/`.
+All existing tests must pass.
 
-### 6. Run the demo
+
+---
+
+# 6. Create a feature branch
+
+Before adding a feature, make sure your local `main` is current:
 
 ```bash
-python -m src.main
+git checkout main
+git pull origin main
+```
+
+Create a new feature branch:
+
+```bash
+git checkout -b feature/multiply
+```
+
+Every new feature must have its own feature branch.
+
+Examples for this repoo:
+
+```text
+feature/multiply
+feature/divide
+feature/power
+feature/average
+```
+
+Do not develop new features directly on `main`.
+
+---
+
+# 7. Add the new feature
+
+Make the required code changes on your feature branch.
+
+For example, to add multiplication, add the function to:
+
+```text
+src/utils.py
+```
+
+```python
+def multiply(a, b):
+    return a * b
+```
+
+Then add a corresponding test to:
+
+```text
+tests/test_utils.py
+```
+
+```python
+def test_multiply():
+    assert multiply(3, 4) == 12
+```
+
+If the feature needs to be demonstrated by the program, use it in:
+
+```text
+src/main.py
+```
+
+### Important
+
+Every new feature should have a corresponding test.
+
+---
+
+# 8. Test everything locally again
+
+After adding the feature, run:
+
+```bash
+pytest
+```
+
+Run the **complete test suite**, not just the new test.
+
+The developer should not create the Pull Request until the local tests pass.
+
+---
+
+# 9. Commit the feature
+
+Check your changes:
+
+```bash
+git status
+```
+
+Stage them:
+
+```bash
+git add .
+```
+
+Commit:
+
+```bash
+git commit -m "Add multiplication feature"
+```
+
+Use a commit message that describes the feature.
+
+---
+
+# 10. Push the feature branch
+
+Push the branch to the shared GitHub repository:
+
+```bash
+git push -u origin feature/new-feature
 ```
 
 ---
 
-## Common Commands
+# 11. Create a Pull Request to `main`
 
-| Command | Description |
-| --- | --- |
-| `pytest` | Run the test suite with coverage |
-| `pytest -k multiply` | Run only tests matching a name |
-| `pytest -x` | Stop at the first failure |
-| `ruff check src/ tests/` | Lint |
-| `ruff format src/ tests/` | Auto-format |
+Go to the shared repository on GitHub.
 
----
+Create a Pull Request:
 
-## Contributing
-- Open a pull request with your changes.
+```text
+base: main
+compare: feature/new-feature
+```
 
----
+The direction must be:
 
-## License
+```text
+feature branch → main
+```
 
-This project is intended **for educational purposes only**.
+Create the Pull Request.
 
 ---
 
-**Happy Learning!**
+# 12. GitHub Actions runs automatically
+
+After the Pull Request is created, GitHub Actions automatically runs the CI workflow.
+
+The workflow performs:
+
+```text
+Checkout repository
+        ↓
+Set up Python
+        ↓
+Install requirements
+        ↓
+Run pytest
+```
+
+The required check is:
+
+```text
+test
+```
+
+The Pull Request must show:
+
+```text
+test ✓
+```
+
+before it can be merged.
+
+If the tests fail:
+
+```text
+test ✗
+```
+
+the Pull Request cannot be merged.
+
+Fix the code, commit the fix, and push it to the same feature branch:
+GitHub Actions will run again automatically.
+
+---
+
+# 13. Another teammate reviews and approves
+
+The teammate who created the Pull Request should not be the only person approving it.
+
+Ask another teammate to review the Pull Request.
+
+The teammate should check:
+
+- The feature is implemented.
+- A test was added.
+- The tests are passing.
+- The change is reasonable.
+
+The teammate then selects:
+
+```text
+Review changes
+→ Approve
+→ Submit review
+```
+
+The Pull Request should now have:
+
+```text
+✓ test
+✓ 1 approval
+```
+
+---
+
+# 14. Merge into `main`
+
+The Pull Request can now be merged because:
+
+```text
+CI workflow passed ✓
++
+Another teammate approved ✓
+```
+
+Click:
+
+```text
+Merge pull request
+```
+
+The feature is now part of `main`.
+
+---
+
+# 15. Update your local `main`
+
+After the Pull Request is merged:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+Your local `main` now contains the new feature.
+
+---
+
+# 16. Repeat for the next feature
+
+For every new feature, repeat the same process.
+
+```text
+main
+ ↓
+git pull
+ ↓
+feature/new-feature
+ ↓
+add code + test
+ ↓
+pytest
+ ↓
+git add .
+ ↓
+git commit
+ ↓
+git push
+ ↓
+Pull Request → main
+ ↓
+GitHub Actions
+ ↓
+test ✓
+ ↓
+1 teammate approval
+ ↓
+merge
+ ↓
+main
+```
+
+---
+
+# Git commands used in this exercise
+
+| Command | Purpose |
+|---|---|
+| `git clone URL` | Clone the shared repository |
+| `cd REPOSITORY-NAME` | Enter the repository |
+| `git remote -v` | Check the repository remote |
+| `git checkout main` | Switch to `main` |
+| `git pull origin main` | Get the latest `main` |
+| `git checkout -b feature/name` | Create and switch to a feature branch |
+| `git status` | Check changed files |
+| `git add .` | Stage changes |
+| `git commit -m "message"` | Commit changes |
+| `git push -u origin branch-name` | Push a new feature branch |
+| `git push` | Push later changes |
+| `pytest` | Run all tests |
+
+
