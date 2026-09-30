@@ -9,8 +9,6 @@ A Pull Request can be merged into `main` only when:
 1. **The CI workflow completes successfully.**
 2. **At least one other teammate approves the Pull Request.**
 
-That is the entire merge protection for this exercise.
-
 ---
 
 # 1. Teammate 1: Configure the project repository
