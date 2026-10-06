@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.utils import add, subtract, multiply
+from src.utils import add, subtract, multiply, divide
 
 
 def test_add():
@@ -15,3 +15,6 @@ def test_subtract():
 
 def test_multiply():
     assert multiply(3, 4) == 12
+
+def test_divide():
+    assert divide(10,5) == 2
